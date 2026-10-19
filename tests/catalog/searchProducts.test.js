@@ -2,13 +2,39 @@ const products = require('../../src/data/products');
 const { searchProducts } = require('../../src/catalog');
 
 describe('searchProducts', () => {
-  test.todo("'Наушники' возвращает товар с ID 1");
-  test.todo("'Чистый код' возвращает товар с ID 6");
-  test.todo("'Настольная лампа' возвращает товар с ID 4");
-  test.todo("'javascript' возвращает товар с ID 3");
-  test.todo("'ЧЕХОЛ' возвращает товар с ID 5");
-  test.todo("'наушники' возвращает товар с ID 1");
-  test.todo("пустая строка возвращает товары с ID [1, 2, 3, 4, 5, 6]");
-  test.todo("строка из пробелов возвращает товары с ID [1, 2, 3, 4, 5, 6]");
-  test.todo("'\\t\\n' возвращает товары с ID [1, 2, 3, 4, 5, 6]");
+  test('finds an exact product name', () => {
+    expect(searchProducts(products, 'Наушники').map(({ id }) => id)).toEqual([1]);
+  });
+
+  test('finds another exact product name', () => {
+    expect(searchProducts(products, 'Чистый код').map(({ id }) => id)).toEqual([6]);
+  });
+
+  test('finds an exact product name with multiple words', () => {
+    expect(searchProducts(products, 'Настольная лампа').map(({ id }) => id)).toEqual([4]);
+  });
+
+  test('search is case-insensitive for javascript', () => {
+    expect(searchProducts(products, 'javascript').map(({ id }) => id)).toEqual([3]);
+  });
+
+  test('search is case-insensitive for ЧЕХОЛ', () => {
+    expect(searchProducts(products, 'ЧЕХОЛ').map(({ id }) => id)).toEqual([5]);
+  });
+
+  test('search is case-insensitive for наушники', () => {
+    expect(searchProducts(products, 'наушники').map(({ id }) => id)).toEqual([1]);
+  });
+
+  test('returns all products for an empty query', () => {
+    expect(searchProducts(products, '').map(({ id }) => id)).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+
+  test('returns all products for a whitespace query', () => {
+    expect(searchProducts(products, '   ').map(({ id }) => id)).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+
+  test('returns all products for a tab and newline query', () => {
+    expect(searchProducts(products, '\t\n').map(({ id }) => id)).toEqual([1, 2, 3, 4, 5, 6]);
+  });
 });
