@@ -22,7 +22,22 @@ function addToCart(cart, product, quantity) {
 
   return [...cart, { ...product, quantity }];
 }
-function changeQuantity() { return notImplemented(); }
+function changeQuantity(cart, productId, quantity) {
+  const existingItem = cart.find((item) => item.id === productId);
+  if (!existingItem) return cart;
+
+  if (!Number.isInteger(quantity) || quantity <= 0) {
+    throw new RangeError('Количество должно быть положительным целым числом.');
+  }
+
+  if (quantity > existingItem.stock) {
+    throw new RangeError('Количество не может превышать остаток на складе.');
+  }
+
+  return cart.map((item) => (
+    item.id === productId ? { ...item, quantity } : item
+  ));
+}
 function removeFromCart() { return notImplemented(); }
 function calculateCartSubtotal() { return notImplemented(); }
 function calculateOrderTotal() { return notImplemented(); }
